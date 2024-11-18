@@ -1,0 +1,6 @@
+services:
+  fastapi:
+    build: src/
+    ports: 
+      - 80:80
+    
