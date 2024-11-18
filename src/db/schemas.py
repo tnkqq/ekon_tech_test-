@@ -17,11 +17,18 @@ class SCustomer(SCustomerAdd):
     model_config = ConfigDict(from_attributes=True)
 
 
+class STraficSearch(BaseModel):
+    customer: Optional[int] = None
+    ip: Optional[str] = None
+    before: Optional[datetime] = None
+    after: Optional[datetime] = None
+
+
 class STraficAdd(BaseModel):
     customer_id: int
     ip: str
     date: Optional[datetime] = None
-    received_trafic: Optional[int] = None
+    received_trafic: int
 
 
 class STrafic(STraficAdd):

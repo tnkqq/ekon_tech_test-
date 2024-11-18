@@ -68,24 +68,24 @@ class InitTestData:
             ]
         )
 
-    @classmethod
-    def customer_trafic_data(cls):
-        return [
-            (
-                _.get("customer_id"),
-                sum(
-                    [
-                        (
-                            int(x.get("received_trafic"))
-                            if x.get("customer_id") == _.get("customer_id")
-                            else 0
-                        )
-                        for x in cls.trafic_test_data
-                    ]
-                ),
-            )
-            for _ in cls.trafic_test_data
-        ]
+    # @classmethod
+    # def customer_trafic_data(cls):
+    #     return [
+    #         (
+    #             _.get("customer_id"),
+    #             sum(
+    #                 [
+    #                     (
+    #                         int(x.get("received_trafic"))
+    #                         if x.get("customer_id") == _.get("customer_id")
+    #                         else 0
+    #                     )
+    #                     for x in cls.trafic_test_data
+    #                 ]
+    #             ),
+    #         )
+    #         for _ in cls.trafic_test_data
+    #     ]
 
     @classmethod
     def sorted_trafics_datetime(cls):

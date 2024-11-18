@@ -1,28 +1,32 @@
-from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Dict
 
 from fastapi import APIRouter, Depends
 
 from db.orm import TraficORM
-from db.schemas import STrafic, STraficAdd
+from db.schemas import STrafic, STraficAdd, STraficSearch
 
 router = APIRouter(prefix="/trafic")
 
 
 @router.get("", name="trafic:get-trafic")
 async def get_trafic(
-    after: datetime | None = None,
-    before: datetime | None = None,
-    customer: int | None = None,
-    ip: str | None = None,
-) -> dict:
-    traifc: list[STrafic] = await TraficORM.get_trafic(
-        after=after, before=before, customer=customer, ip=ip
-    )
+    tr: Annotated[STraficSearch, Depends()]
+) -> Dict[int, int]:
+    traifc: list[STrafic] = await TraficORM.get_trafic(tr)
 
-    trafic_sum = sum([_.received_trafic for _ in traifc])
+    users_trafic = {
+        k.customer_id: sum(
+            [
+                _.received_trafic if _.customer_id == k.customer_id else 0
+                for _ in traifc
+            ]
+        )
+        for k in traifc
+    }
 
-    return {"trafic": trafic_sum}
+    # trafic_sum = sum([_.received_trafic for _ in traifc])
+
+    return users_trafic
 
 
 @router.post("", name="trafic:post-trafic")

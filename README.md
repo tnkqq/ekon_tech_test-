@@ -1,7 +1,7 @@
 # ekon_tech_test-
 ## Тестовое задание для "ЭКОН Технологии"
 
-#### *GET* trafic/ -> sum(trafic)
+#### *GET* trafic/ -> dict[int:int]
 ```
   - customer
   - after

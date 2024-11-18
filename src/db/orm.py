@@ -4,7 +4,8 @@ from sqlalchemy import and_, insert, select
 
 from .database import Base, async_session_factory, engine
 from .models import Customer, Trafic
-from .schemas import SCustomer, SCustomerAdd, STrafic, STraficAdd
+from .schemas import (SCustomer, SCustomerAdd, STrafic, STraficAdd,
+                      STraficSearch)
 
 
 class DBManeger:
@@ -31,22 +32,17 @@ class TraficORM:
             return tr
 
     @staticmethod
-    async def get_trafic(
-        after: datetime | None = None,
-        before: datetime | None = None,
-        customer: int | None = None,
-        ip: int | None = None,
-    ) -> list[STrafic]:
+    async def get_trafic(tr: STraficSearch) -> list[STrafic]:
         async with async_session_factory() as session:
             query = select(Trafic)
-            if ip:
-                query = query.filter(Trafic.ip == ip)
-            if customer:
-                query = query.filter(Trafic.customer_id == customer)
-            if after:
-                query = query.filter(Trafic.date > after)
-            if before:
-                query = query.filter(Trafic.date < before)
+            if tr.ip:
+                query = query.filter(Trafic.ip == tr.ip)
+            if tr.customer:
+                query = query.filter(Trafic.customer_id == tr.customer)
+            if tr.after:
+                query = query.filter(Trafic.date > tr.after)
+            if tr.before:
+                query = query.filter(Trafic.date < tr.before)
             res = await session.execute(query)
             trafic_models = res.scalars().all()
             return trafic_models

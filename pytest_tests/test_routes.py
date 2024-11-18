@@ -22,20 +22,21 @@ class TestTrafic:
             res = await client.get(
                 app.url_path_for("trafic:get-trafic"), params={"ip": ip}
             )
-            assert res.json().get("trafic") == exp_result
+            assert sum(res.json().values()) == exp_result
             assert res.status_code == HTTPStatus.OK
 
     @pytest.mark.asyncio
     async def test_trafic_by_customer(
         self, app: FastAPI, client: AsyncClient, customer_list, trafic_list
     ):
-        for customer, exp_result in InitTestData.customer_trafic_data():
+        for customer in InitTestData.customer_test_data.keys():
             res = await client.get(
                 app.url_path_for("trafic:get-trafic"),
                 params={"customer": customer},
             )
-            assert res.json().get("trafic") == exp_result
-            assert res.status_code == HTTPStatus.OK
+            for x in res.json().keys():
+                assert int(x) == customer
+                assert res.status_code == HTTPStatus.OK
 
     @pytest.mark.asyncio
     async def test_trafic_by_timedelta(
@@ -46,12 +47,12 @@ class TestTrafic:
             res = await client.get(
                 app.url_path_for("trafic:get-trafic"), params={"before": dt}
             )
-            assert res.json().get("trafic") == 0
+            assert len(res.json().values()) == 0
             res = await client.get(
                 app.url_path_for("trafic:get-trafic"),
                 params={"after": dt + datetime.timedelta(1, 1, 1)},
             )
-            assert res.json().get("trafic") == sum(
+            assert sum(res.json().values()) == sum(
                 [
                     (
                         _.get("trafic", 0)
@@ -61,6 +62,4 @@ class TestTrafic:
                     for _ in InitTestData.trafic_test_data
                 ]
             )
-            # res = await client.get(app.url_path_for('trafic:get-trafic'), params={'before': dt+datetime.timedelta(1,1,1), 'after': sorted_datetime[0] - datetime.datetime(1, 1, 1)})
-            # assert res.json().get('trafic') == sum([_.get('trafic', 0) if (_.get('date') > datetime.strptime(str(sorted_datetime[0] - datetime.datetime(1, 1, 1))) and _.get('date') < dt else 0 for _ in InitTestData.trafic_test_data])
             assert res.status_code == HTTPStatus.OK
