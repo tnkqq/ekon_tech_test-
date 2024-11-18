@@ -28,23 +28,23 @@
 ---
 ### Start API
 #### 1. With docker
-```
+```bash
   docker-compose up
 ```
 #### 2. Local 
-  ```
+  ```bash
     python3 -m venv venv 
   ```
-  ```
+  ```bash
     source venv/bin/activate 
   ```
-  ```
+  ```bash
     pip install -r src/rquirements.txt
   ```
-  ```
+  ```bash
     cd src/
   ```
-  ```
+  ```bash
     uvicorn app:app --reload
   ```
 
@@ -52,17 +52,17 @@
 
 ---
 ### Run tests 
-```
+```bash
   python3 -m venv venv 
 ```
-```
+```bash
   source venv/bin/activate 
 ```
-```
+```bash
   pip install -r src/rquirements.txt
 ```
 
-```
+```bash
   pytest -vv
 ```
 
